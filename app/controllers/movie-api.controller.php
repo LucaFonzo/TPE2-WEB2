@@ -9,7 +9,7 @@ class MovieApiController extends ApiController {
     $this->model = new MovieModel();
   }
 
-  public function getMovies(){
+  public function getMovies($params = null){
     $movies = $this->model->getAll();
     $this->view->response($movies);
   }
@@ -62,5 +62,4 @@ class MovieApiController extends ApiController {
       $this->view->response("La pelicula a editar no existe",404);
     }
   }
-
 }

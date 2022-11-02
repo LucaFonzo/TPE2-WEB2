@@ -59,6 +59,7 @@ class GenderModel {
     try {
       $query = $this->db->prepare("DELETE FROM genders WHERE `genders`.`id_gender` = ?");
       $query->execute([$id]);
+      return true;
     } catch (\Throwable $th) {
       return false;
     }

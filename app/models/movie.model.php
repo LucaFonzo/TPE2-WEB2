@@ -61,5 +61,9 @@ class MovieModel{
         $target = "img/movie/" . uniqid() . "." . strtolower(pathinfo($image['name'], PATHINFO_EXTENSION));
         move_uploaded_file($image['tmp_name'], $target);
         return $target;
-    }
+  }
+
+  public function getMoviesByOrder($params = null){
+    var_dump("Hola");
+  }
 }

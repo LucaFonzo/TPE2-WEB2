@@ -46,4 +46,18 @@ class GenderApiController extends ApiController {
       $this->view->response("El genero no existe",404);
     }
   }
+
+  public function delete($params = null){
+    $id = $params[':ID'];
+    $gender = $this->model->get($id);
+    if ($gender){
+      if ($this->model->delete($id)){
+        $this->view->response("El genero con id: $id se elimino correctamente",200);
+      }else {
+        $this->view->response("El genero no se pudo eliminar porque tiene datos relacionados aun",400);
+      }
+    }else {
+      $this->view->response("El genero no se pudo eliminar",404);
+    }
+  }
 }

@@ -18,18 +18,37 @@ class MovieModel{
     return $movies;
   }
 
-  public function getMoviesByGender($id){
-    $query = $this->db->prepare("SELECT movies.*, genders.* FROM movies JOIN genders ON movies.id_gender_fk = genders.id_gender WHERE movies.id_gender_fk = ?");
-    $query->execute([$id]);
-    $movies = $query->fetchAll(PDO::FETCH_OBJ);
-    return $movies;
-  }
-
   public function get($id){
     $query = $this->db->prepare("SELECT movies.*, genders.name FROM movies JOIN genders ON movies.id_gender_fk = genders.id_gender WHERE movies.id_movie = ?");
     $query->execute([$id]);
     $movie = $query->fetch(PDO::FETCH_OBJ);
     return $movie;
+  }
+
+  public function getByPagination($page,$limit){
+    $offSet = ($limit * $page) - $limit;
+    $query = $this->db->prepare("SELECT movies.*, genders.* FROM movies JOIN genders ON movies.id_gender_fk = genders.id_gender ORDER BY id_movie ASC LIMIT $limit OFFSET $offSet");
+    $query->execute();
+    $movies = $query->fetchAll(PDO::FETCH_OBJ);
+    return $movies;
+  }
+
+  public function getAllByOrder($sort,$order){
+    try {
+      $query = $this->db->prepare("SELECT movies.*, genders.* FROM movies JOIN genders ON movies.id_gender_fk = genders.id_gender ORDER BY $sort $order");
+    $query->execute();
+    $movies = $query->fetchAll(PDO::FETCH_OBJ);
+    return $movies;
+    } catch (\Throwable $th) {
+      return false;
+    }
+  }
+
+  public function getMoviesByGender($id){
+    $query = $this->db->prepare("SELECT movies.*, genders.* FROM movies JOIN genders ON movies.id_gender_fk = genders.id_gender WHERE movies.id_gender_fk = ?");
+    $query->execute([$id]);
+    $movies = $query->fetchAll(PDO::FETCH_OBJ);
+    return $movies;
   }
 
   public function insert($titulo,$descripcion,$autor,$fechaEstreno,$idGenero,$imagen = null){
@@ -61,9 +80,5 @@ class MovieModel{
         $target = "img/movie/" . uniqid() . "." . strtolower(pathinfo($image['name'], PATHINFO_EXTENSION));
         move_uploaded_file($image['tmp_name'], $target);
         return $target;
-  }
-
-  public function getMoviesByOrder($params = null){
-    var_dump("Hola");
   }
 }

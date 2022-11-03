@@ -10,8 +10,32 @@ class MovieApiController extends ApiController {
   }
 
   public function getMovies($params = null){
-    $movies = $this->model->getAll();
-    $this->view->response($movies);
+
+    if (isset($_GET['sort']))
+    {
+      $sort = $_GET['sort'];
+      $order = $_GET['order'];
+      $movies = $this->model->getAllByOrder($sort,$order);
+      if ($movies)
+      {
+        $this->view->response($movies);
+      }
+      else
+      {
+        $this->view->response("Ese orden no existe",400);
+      }
+    }else if (isset($_GET['page']) && isset($_GET['limit']))
+    {
+      $page = $_GET['page'];
+      $limit = $_GET['limit'];
+      $movies = $this->model->getByPagination($page,$limit);
+      $this->view->response($movies);
+    }
+    else
+    {
+      $movies = $this->model->getAll();
+      $this->view->response($movies);
+    }
   }
 
   public function getMovie($params = null){

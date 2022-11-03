@@ -11,7 +11,6 @@ $router->addRoute('movies/:ID','GET','MovieApiController','getMovie');
 $router->addRoute('movies/:ID','DELETE','MovieApiController','deleteMovie');
 $router->addRoute('movies','POST','MovieApiController','insertMovie');
 $router->addRoute('movies/:ID','PUT','MovieApiController','editMovie');
-//$router->addRoute('movies?sort=:ID','GET','MovieApiController','getMoviesByOrder');
 
 //GENDERS
 // $router->addRoute('genders','GET','GenderApiController','getGenders');

@@ -2,6 +2,7 @@
 require_once './app/controllers/ApiController.php';
 require_once './app/models/movie.model.php';
 
+
 class MovieApiController extends ApiController {
 
   public function __construct() {
@@ -10,8 +11,7 @@ class MovieApiController extends ApiController {
   }
 
   public function getMovies($params = null){
-
-    if (isset($_GET['sort']))
+    if (isset($_GET['sort']) && isset($_GET['order']))
     {
       $sort = $_GET['sort'];
       $order = $_GET['order'];
@@ -22,15 +22,25 @@ class MovieApiController extends ApiController {
       }
       else
       {
-        $this->view->response("Ese orden no existe",400);
+        $this->view->response("Ese orden no existe",404); //400 o 404?
       }
     }else if (isset($_GET['page']) && isset($_GET['limit']))
     {
       $page = $_GET['page'];
       $limit = $_GET['limit'];
       $movies = $this->model->getByPagination($page,$limit);
-      $this->view->response($movies);
-    }
+      if ($movies)
+      {
+        $this->view->response($movies);
+      }else
+      {
+        $this->view->response("No se encontraron peliculas",404);
+      }
+    }//else if (isset($_GET['filter']) && isset($_GET['value']))
+    // {
+    //   $filter = $_GET['filter'];
+    //   $movies = $this->model->getByFilter($filter);
+    // }
     else
     {
       $movies = $this->model->getAll();
@@ -62,6 +72,11 @@ class MovieApiController extends ApiController {
   }
   public function insertMovie($params = null){
     $movie = $this->getData();
+    if(!$this->authHelper->isLoggedIn()){
+      $this->view->response("No estas logeado", 401);
+      return;
+    }
+
     if (empty($movie->title) || empty($movie->description) || empty($movie->author) || empty($movie->premiere_date) || empty($movie->id_gender_fk)){
       $this->view->response("Todos los campos deben estar completos",400);
     }else {
@@ -74,6 +89,10 @@ class MovieApiController extends ApiController {
   public function editMovie($params = null){
     $id = $params[':ID'];
     $movieToEdit = $this->model->get($id);
+    if(!$this->authHelper->isLoggedIn()){
+      $this->view->response("No estas logeado", 401);
+      return;
+    }
     if ($movieToEdit){
       $movie = $this->getData();
       if (empty($movie->title) || empty($movie->description) || empty($movie->author) || empty($movie->premiere_date) || empty($movie->id_gender_fk)){

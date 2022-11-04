@@ -44,6 +44,10 @@ class MovieModel{
     }
   }
 
+  public function getByFilter($filter){
+    
+  }
+
   public function getMoviesByGender($id){
     $query = $this->db->prepare("SELECT movies.*, genders.* FROM movies JOIN genders ON movies.id_gender_fk = genders.id_gender WHERE movies.id_gender_fk = ?");
     $query->execute([$id]);

@@ -2,6 +2,7 @@
 require_once './libs/Router.php';
 require_once './app/controllers/movie-api.controller.php';
 require_once './app/controllers/gender-api.controller.php';
+require_once './app/controllers/auth-api.controller.php';
 
 $router = new Router();
 
@@ -11,6 +12,9 @@ $router->addRoute('movies/:ID','GET','MovieApiController','getMovie');
 $router->addRoute('movies/:ID','DELETE','MovieApiController','deleteMovie');
 $router->addRoute('movies','POST','MovieApiController','insertMovie');
 $router->addRoute('movies/:ID','PUT','MovieApiController','editMovie');
+
+//TOKEN
+$router->addRoute("auth/token", 'GET', 'AuthApiController', 'getToken');
 
 //GENDERS
 // $router->addRoute('genders','GET','GenderApiController','getGenders');

@@ -1,21 +1,9 @@
-# ENDPOINT
-http://localhost/carpetaDondeEstaElProyecto/api/resource
+# MOVIES API
+Una API REST que permite manejar un CRUD de peliculas y traer su informacion de manera ordenada,paginada y a traves de filtros
 
-# OBTENER TODAS LAS PELICULAS
-GET api/movies
+# Importar base de datos
+Importar desde PHPMyAdmin(o derivados) database/db_movies.sql
 
-# OBTENER TODAS LAS PELICULAS POR UN ORDEN
-GET api/movies?sort={{campoAOrdenar}}&order={{ASC||DESC}}(ascendente o descendente)
-POSIBLE CAMPOS A ORDENAR(id_movie,title,description,author,premiere_date,id_gender_fk)
-
-# OBTENER UNA PELICULA
-GET api/movies/movieID
-
-# CREAR PELICULA
-POST api/movies (Se necesita token)
-
-# EDITAR PELICULA
-PUT api/movies/movieID (Se necesita token)
-
-# BORRAR PELICULA
-DELETE api/movies/movieID
+# Pruebas desde PostMan o cualquier plataforma de APIS
+Para probar desde postman o cualquier plataforma distinta,se debe ingresar como endpoint de la API:
+  http://localhost/carpetaDondeEstaElProyecto/api/movies

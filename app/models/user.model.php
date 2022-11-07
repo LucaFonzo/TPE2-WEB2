@@ -14,9 +14,14 @@ class UserModel {
 
 
   public function getUserByEmail($email) {
-    $query = $this->db->prepare("SELECT * FROM users WHERE email = ?");
-    $query->execute([$email]);
-    return $query->fetch(PDO::FETCH_OBJ);
+    try {
+      $query = $this->db->prepare("SELECT * FROM users WHERE email = ?");
+      $query->execute([$email]);
+      return $query->fetch(PDO::FETCH_OBJ);
+    } catch (\Throwable $th) {
+      return false;
+    }
+
   }
 
   public function addUser($email,$password){

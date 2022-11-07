@@ -31,15 +31,18 @@ class AuthApiController  extends ApiController{
         $userpass = explode(":", $userpass);
         $user = $userpass[0];
         $pass = $userpass[1];
-        if($user == "Luca" && $pass == "123"){
+        //TRAER USER DE LA DB
+        $userDB = $this->model->getUserByEmail($user);
+        //$user == "Luca" && $pass == "123"
+        if(isset($userDB->email) && password_verify($pass,$userDB->password)){
             //  crear un token
             $header = array(
                 'alg' => 'HS256',
                 'typ' => 'JWT'
             );
             $payload = array(
-                'id' => 1,
-                'name' => "Luca",
+                'id' => $userDB->id_user,
+                'name' => "$userDB->email",
                 'exp' => time()+3600
             );
             $header = base64url_encode(json_encode($header));

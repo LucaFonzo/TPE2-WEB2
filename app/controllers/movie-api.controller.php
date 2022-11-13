@@ -13,22 +13,32 @@ class MovieApiController extends ApiController {
   public function getMovies($params = null){
     if (isset($_GET['sort']) && isset($_GET['order']))
     {
+      $sorters = array("id_movie","title","description","author","premiere_date","id_gender_fk","image");
+      $orders = array("asc","desc");
+      if (!in_array($_GET['sort'],$sorters) || !in_array($_GET['order'],$orders)){
+        $this->view->response("Ese orden no existe",400); //400 o 404?
+      }else
+      {
       $sort = $_GET['sort'];
       $order = $_GET['order'];
       $movies = $this->model->getAllByOrder($sort,$order);
-      if ($movies)
-      {
-        $this->view->response($movies);
-      }
-      else
-      {
-        $this->view->response("Ese orden no existe",404); //400 o 404?
+        if ($movies)
+        {
+          $this->view->response($movies);
+        }
+        else
+        {
+          $this->view->response("No se encontraron peliculas",404); //400 o 404?
+        }
       }
     }else if (isset($_GET['page']) && isset($_GET['limit']))
     {
       $page = $_GET['page'];
       $limit = $_GET['limit'];
-      $movies = $this->model->getByPagination($page,$limit);
+      $page = (int)$page;
+      $limit = (int)$limit;
+      $offSet = ($limit * $page) - $limit;
+      $movies = $this->model->getByPagination($offSet,$limit);
       if ($movies)
       {
         $this->view->response($movies);
@@ -36,11 +46,17 @@ class MovieApiController extends ApiController {
       {
         $this->view->response("No se encontraron peliculas",404);
       }
-    }//else if (isset($_GET['filter']) && isset($_GET['value']))
-    // {
-    //   $filter = $_GET['filter'];
-    //   $movies = $this->model->getByFilter($filter);
-    // }
+    }else if (isset($_GET['filter']) && isset($_GET['value'])){
+      $filters = array("id_gender_fk");
+      if (in_array($_GET['filter'],$filters)){
+        $filter = $_GET['filter'];
+        $value = $_GET['value'];
+        $movies = $this->model->getByFiltering($filter,$value);
+        if ($movies){
+          $this->view->response($movies);
+        }
+      }
+    }
     else
     {
       $movies = $this->model->getAll();
@@ -70,6 +86,7 @@ class MovieApiController extends ApiController {
       $this->view->response("La pelicula no existe",404);
     }
   }
+
   public function insertMovie($params = null){
     $movie = $this->getData();
     if(!$this->authHelper->isLoggedIn()){

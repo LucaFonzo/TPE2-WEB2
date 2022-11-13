@@ -25,9 +25,21 @@ class MovieModel{
     return $movie;
   }
 
-  public function getByPagination($page,$limit){
-    $offSet = ($limit * $page) - $limit;
-    $query = $this->db->prepare("SELECT movies.*, genders.* FROM movies JOIN genders ON movies.id_gender_fk = genders.id_gender ORDER BY id_movie ASC LIMIT $limit OFFSET $offSet");
+  public function getByPagination($offSet,$limit){
+    try {
+      $query = $this->db->prepare("SELECT movies.*, genders.name FROM movies JOIN genders ON movies.id_gender_fk = genders.id_gender LIMIT ? OFFSET ?");
+      $query->bindParam(1, $limit, PDO::PARAM_INT);
+      $query->bindParam(2, $offSet, PDO::PARAM_INT);
+      $query->execute();
+      $movies = $query->fetchAll(PDO::FETCH_OBJ);
+      return $movies;
+    } catch (\Throwable $th) {
+      return false;
+    }
+  }
+
+  public function getByFiltering($filter,$value){
+    $query = $this->db->prepare("SELECT * FROM movies WHERE $filter = $value");
     $query->execute();
     $movies = $query->fetchAll(PDO::FETCH_OBJ);
     return $movies;
@@ -35,17 +47,13 @@ class MovieModel{
 
   public function getAllByOrder($sort,$order){
     try {
-      $query = $this->db->prepare("SELECT movies.*, genders.* FROM movies JOIN genders ON movies.id_gender_fk = genders.id_gender ORDER BY $sort $order");
-    $query->execute();
-    $movies = $query->fetchAll(PDO::FETCH_OBJ);
-    return $movies;
+      $query = $this->db->prepare("SELECT movies.*, genders.name FROM movies JOIN genders ON movies.id_gender_fk = genders.id_gender ORDER BY $sort $order");
+      $query->execute();
+      $movies = $query->fetchAll(PDO::FETCH_OBJ);
+      return $movies;
     } catch (\Throwable $th) {
       return false;
     }
-  }
-
-  public function getByFilter($filter){
-    
   }
 
   public function getMoviesByGender($id){

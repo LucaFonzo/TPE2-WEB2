@@ -17,10 +17,10 @@ $router->addRoute('movies/:ID','PUT','MovieApiController','editMovie');
 $router->addRoute("auth/token", 'GET', 'AuthApiController', 'getToken');
 
 //GENDERS
-// $router->addRoute('genders','GET','GenderApiController','getGenders');
-// $router->addRoute('genders/:ID','GET','GenderApiController','getGender');
-// $router->addRoute('genders','POST','GenderApiController','insertGender');
-// $router->addRoute('genders/:ID','PUT','GenderApiController','editGender');
+$router->addRoute('genders','GET','GenderApiController','getGenders');
+$router->addRoute('genders/:ID','GET','GenderApiController','getGender');
+$router->addRoute('genders','POST','GenderApiController','insertGender');
+$router->addRoute('genders/:ID','PUT','GenderApiController','editGender');
 
 
 $router->route($_GET["resource"], $_SERVER['REQUEST_METHOD']);

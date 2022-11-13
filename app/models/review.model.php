@@ -1,6 +1,6 @@
 <?php
 
-class GenderModel {
+class ReviewModel{
   private $db;
 
   public function __construct(){
@@ -18,7 +18,7 @@ class GenderModel {
 
   public function getAll(){
     try {
-    $query = $this->db->prepare("SELECT * FROM genders");
+    $query = $this->db->prepare("SELECT * FROM reviews");
     $query->execute();
     $genders = $query->fetchAll(PDO::FETCH_OBJ);
     return $genders;
@@ -29,7 +29,7 @@ class GenderModel {
 
   public function getAllByOrder($sort,$order){
     try {
-      $query = $this->db->prepare("SELECT * FROM genders ORDER BY $sort $order");
+      $query = $this->db->prepare("SELECT * FROM reviews ORDER BY $sort $order");
       $query->execute();
       $movies = $query->fetchAll(PDO::FETCH_OBJ);
       return $movies;
@@ -40,7 +40,7 @@ class GenderModel {
 
   public function getByPagination($offSet,$limit){
     try {
-      $query = $this->db->prepare("SELECT * FROM genders LIMIT ? OFFSET ?");
+      $query = $this->db->prepare("SELECT * FROM reviews LIMIT ? OFFSET ?");
       $query->bindParam(1, $limit, PDO::PARAM_INT);
       $query->bindParam(2, $offSet, PDO::PARAM_INT);
       $query->execute();
@@ -52,14 +52,14 @@ class GenderModel {
   }
 
   public function getByFiltering($filter,$value){
-    $query = $this->db->prepare("SELECT * FROM genders WHERE $filter = $value");
+    $query = $this->db->prepare("SELECT * FROM reviews WHERE $filter = $value");
     $query->execute();
     $movies = $query->fetchAll(PDO::FETCH_OBJ);
     return $movies;
   }
 
   public function get($id){
-    $query = $this->db->prepare("SELECT * FROM genders WHERE id_gender = ?");
+    $query = $this->db->prepare("SELECT * FROM reviews WHERE id_gender = ?");
     $query->execute([$id]);
     $gender = $query->fetchAll(PDO::FETCH_OBJ);
     return $gender;
@@ -67,7 +67,7 @@ class GenderModel {
 
   public function insert($gender){
     try {
-      $query = $this->db->prepare('INSERT INTO `genders` (`id_gender`, `name`) VALUES (?, ?)');
+      $query = $this->db->prepare('INSERT INTO reviews (`id_gender`, `name`) VALUES (?, ?)');
       $query->execute([null,$gender]);
       return $this->db->lastInsertId();
     } catch (PDOException $error) {
@@ -77,7 +77,7 @@ class GenderModel {
 
   public function update($gender,$id){
     try {
-      $query = $this->db->prepare('UPDATE `genders` SET `name` = ? WHERE `genders`.`id_gender` = ?');
+      $query = $this->db->prepare('UPDATE reviews SET `name` = ? WHERE `genders`.`id_gender` = ?');
       $query->execute([$gender,$id]);
       return $id;
     } catch (\Throwable $th) {
@@ -87,10 +87,12 @@ class GenderModel {
 
   public function delete($id){
     try {
-      $query = $this->db->prepare("DELETE FROM genders WHERE `genders`.`id_gender` = ?");
+      $query = $this->db->prepare("DELETE FROM reviews WHERE `genders`.`id_gender` = ?");
       $query->execute([$id]);
-    } catch (Exception $e) {
+      return true;
+    } catch (\Throwable $th) {
       return false;
     }
   }
+
 }

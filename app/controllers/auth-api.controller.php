@@ -33,7 +33,6 @@ class AuthApiController  extends ApiController{
         $pass = $userpass[1];
         //TRAER USER DE LA DB
         $userDB = $this->model->getUserByEmail($user);
-        //$user == "Luca" && $pass == "123"
         if(isset($userDB->email) && password_verify($pass,$userDB->password)){
             //  crear un token
             $header = array(

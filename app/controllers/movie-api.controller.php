@@ -64,7 +64,11 @@ class MovieApiController extends ApiController {
     else
     {
       $movies = $this->model->getAll();
-      $this->view->response($movies);
+      if ($movies){
+        $this->view->response($movies);
+      }else {
+        $this->view->response("No se encontraron peliculas",404);
+      }
     }
   }
 
@@ -85,7 +89,7 @@ class MovieApiController extends ApiController {
     $movie = $this->model->get($id);
     if ($movie){
       $this->model->delete($id);
-      $this->view->response($movie);
+      $this->view->response("La pelicula con id: $id se borro con exito");
     }else {
       $this->view->response("La pelicula no existe",404);
     }

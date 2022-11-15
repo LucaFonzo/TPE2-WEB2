@@ -18,10 +18,10 @@ $router->addRoute('movies/:ID','DELETE','MovieApiController','delete');
 $router->addRoute("auth/token", 'GET', 'AuthApiController', 'getToken');
 
 //GENDERS
-$router->addRoute('genders','GET','GenderApiController','getGenders');
-$router->addRoute('genders/:ID','GET','GenderApiController','getGender');
-$router->addRoute('genders','POST','GenderApiController','insertGender');
-$router->addRoute('genders/:ID','PUT','GenderApiController','editGender');
+$router->addRoute('genders','GET','GenderApiController','getAll');
+$router->addRoute('genders/:ID','GET','GenderApiController','get');
+$router->addRoute('genders','POST','GenderApiController','insert');
+$router->addRoute('genders/:ID','PUT','GenderApiController','edit');
 $router->addRoute('genders/:ID','DELETE','GenderApiController','delete');
 
 //REVIEWS

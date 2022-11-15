@@ -52,8 +52,8 @@ class GenderModel {
   }
 
   public function getByFiltering($filter,$value){
-    $query = $this->db->prepare("SELECT * FROM genders WHERE $filter = $value");
-    $query->execute();
+    $query = $this->db->prepare("SELECT * FROM genders WHERE $filter = ?");
+    $query->execute([$value]);
     $movies = $query->fetchAll(PDO::FETCH_OBJ);
     return $movies;
   }

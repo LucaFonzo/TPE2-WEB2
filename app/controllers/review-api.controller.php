@@ -60,7 +60,11 @@ class ReviewApiController extends ApiController{
     else
     {
       $reviews = $this->model->getAll();
-      $this->view->response($reviews);
+      if ($reviews){
+        $this->view->response($reviews);
+      }else {
+        $this->view->response("No se encontraron reviews",404);
+      }
     }
   }
 
@@ -116,10 +120,10 @@ class ReviewApiController extends ApiController{
       $this->view->response("Todos los campos deben estar completos",400);
       }else {
         $reviewEdited = $this->model->update($review->review,$review->id_movie_fk,$id);
-        $this->view->response("La reseña con id: $id actualizada con exito",200);
+        $this->view->response("La review con id: $id fue actualizada con exito",200);
       }
     }else {
-      $this->view->response("La reseña a editar no existe",404);
+      $this->view->response("La review a editar no existe",404);
     }
   }
 }

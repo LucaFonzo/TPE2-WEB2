@@ -9,7 +9,7 @@ class GenderApiController extends ApiController {
     $this->model = new GenderModel();
   }
 
-  public function getGenders(){
+  public function getAll(){
     if (isset($_GET['sort']) && isset($_GET['order']))
     {
       $sorters = array("id_gender","name");
@@ -46,24 +46,32 @@ class GenderApiController extends ApiController {
         $this->view->response("No se encontraron generos",404);
       }
     }else if (isset($_GET['filter']) && isset($_GET['value'])){
-      $filters = array("name");
+      $filters = array("stars");
       if (in_array($_GET['filter'],$filters)){
         $filter = $_GET['filter'];
         $value = $_GET['value'];
         $genders = $this->model->getByFiltering($filter,$value);
         if ($genders){
           $this->view->response($genders);
+        }else {
+          $this->view->response("No se encontraron generos",404);
         }
+      }else {
+        $this->view->response("El campo a filtrar no existe",400);
       }
     }
     else
     {
       $genders = $this->model->getAll();
-      $this->view->response($genders);
+      if ($genders){
+        $this->view->response($genders);
+      }else {
+        $this->view->response("No se encontraron generos",404);
+      }
     }
   }
 
-  public function getGender($params = null){
+  public function get($params = null){
     $id = $params[':ID'];
     $gender = $this->model->get($id);
     if ($gender){
@@ -73,7 +81,7 @@ class GenderApiController extends ApiController {
     }
   }
 
-  public function insertGender($params = null){
+  public function insert($params = null){
     $gender = $this->getData();
     if(!$this->authHelper->isLoggedIn()){
       $this->view->response("No estas logeado", 401);
@@ -87,7 +95,7 @@ class GenderApiController extends ApiController {
     }
   }
 
-  public function editGender($params = null){
+  public function edit($params = null){
     $id = $params[':ID'];
     $gender = $this->model->get($id);
     if(!$this->authHelper->isLoggedIn()){
@@ -99,7 +107,7 @@ class GenderApiController extends ApiController {
       $idEdited = $this->model->update($newGender->name,$id);
       $this->view->response("El genero con id: $idEdited se actualizo correctamente",200);
     }else {
-      $this->view->response("El genero no existe",404);
+      $this->view->response("El genero a editar no existe",404);
     }
   }
 
@@ -107,8 +115,10 @@ class GenderApiController extends ApiController {
     $id = $params[':ID'];
     $gender = $this->model->get($id);
     if ($gender){
-      if (!$this->model->delete($id)){
-        $this->view->response("El genero no se pudo eliminar porque tiene registros relacionados aun",400);
+      $this->model->delete($id);
+      $gender = $this->model->get($id);
+      if ($gender){
+        $this->view->response("El genero no se pudo eliminar porque tiene registros asociados",400);
       }else {
         $this->view->response("El genero con id: $id se elimino correctamente",200);
       }

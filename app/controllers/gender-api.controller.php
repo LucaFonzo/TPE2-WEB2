@@ -108,7 +108,7 @@ class GenderApiController extends ApiController {
     $gender = $this->model->get($id);
     if ($gender){
       if (!$this->model->delete($id)){
-        $this->view->response("El genero no se pudo eliminar porque tiene datos relacionados aun",400);
+        $this->view->response("El genero no se pudo eliminar porque tiene registros relacionados aun",400);
       }else {
         $this->view->response("El genero con id: $id se elimino correctamente",200);
       }

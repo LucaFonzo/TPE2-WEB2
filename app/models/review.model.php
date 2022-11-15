@@ -20,8 +20,8 @@ class ReviewModel{
     try {
     $query = $this->db->prepare("SELECT * FROM reviews");
     $query->execute();
-    $genders = $query->fetchAll(PDO::FETCH_OBJ);
-    return $genders;
+    $reviews = $query->fetchAll(PDO::FETCH_OBJ);
+    return $reviews;
   } catch (PDOException $error) {
     return false;
   }
@@ -31,8 +31,8 @@ class ReviewModel{
     try {
       $query = $this->db->prepare("SELECT * FROM reviews ORDER BY $sort $order");
       $query->execute();
-      $movies = $query->fetchAll(PDO::FETCH_OBJ);
-      return $movies;
+      $reviews = $query->fetchAll(PDO::FETCH_OBJ);
+      return $reviews;
     } catch (\Throwable $th) {
       return false;
     }
@@ -44,8 +44,8 @@ class ReviewModel{
       $query->bindParam(1, $limit, PDO::PARAM_INT);
       $query->bindParam(2, $offSet, PDO::PARAM_INT);
       $query->execute();
-      $movies = $query->fetchAll(PDO::FETCH_OBJ);
-      return $movies;
+      $reviews = $query->fetchAll(PDO::FETCH_OBJ);
+      return $reviews;
     } catch (\Throwable $th) {
       return false;
     }
@@ -54,31 +54,27 @@ class ReviewModel{
   public function getByFiltering($filter,$value){
     $query = $this->db->prepare("SELECT * FROM reviews WHERE $filter = $value");
     $query->execute();
-    $movies = $query->fetchAll(PDO::FETCH_OBJ);
-    return $movies;
+    $reviews = $query->fetchAll(PDO::FETCH_OBJ);
+    return $reviews;
   }
 
   public function get($id){
-    $query = $this->db->prepare("SELECT * FROM reviews WHERE id_gender = ?");
+    $query = $this->db->prepare("SELECT * FROM reviews WHERE id_review = ?");
     $query->execute([$id]);
-    $gender = $query->fetchAll(PDO::FETCH_OBJ);
-    return $gender;
+    $review = $query->fetchAll(PDO::FETCH_OBJ);
+    return $review;
   }
 
-  public function insert($gender){
-    try {
-      $query = $this->db->prepare('INSERT INTO reviews (`id_gender`, `name`) VALUES (?, ?)');
-      $query->execute([null,$gender]);
+  public function insert($review,$id_movie_fk){
+      $query = $this->db->prepare('INSERT INTO reviews (`review`, `id_movie_fk`) VALUES (?,?)');
+      $query->execute([$review,$id_movie_fk]);
       return $this->db->lastInsertId();
-    } catch (PDOException $error) {
-      return false;
-    }
   }
 
-  public function update($gender,$id){
+  public function update($review,$id_movie_fk,$id){
     try {
-      $query = $this->db->prepare('UPDATE reviews SET `name` = ? WHERE `genders`.`id_gender` = ?');
-      $query->execute([$gender,$id]);
+      $query = $this->db->prepare('UPDATE reviews SET `review` = ?, `id_movie_fk` = ? WHERE `reviews`.`id_review` = ?');
+      $query->execute([$review,$id_movie_fk,$id]);
       return $id;
     } catch (\Throwable $th) {
       //throw $th;
@@ -87,7 +83,7 @@ class ReviewModel{
 
   public function delete($id){
     try {
-      $query = $this->db->prepare("DELETE FROM reviews WHERE `genders`.`id_gender` = ?");
+      $query = $this->db->prepare("DELETE FROM reviews WHERE `reviews`.`id_review` = ?");
       $query->execute([$id]);
       return true;
     } catch (\Throwable $th) {

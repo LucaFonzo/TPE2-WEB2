@@ -6,10 +6,14 @@ function base64url_encode($data) {
 }
 
 class AuthApiController  extends ApiController{
+  private $key;
+  private $timeToExpire;
 
   public function __construct(){
     parent::__construct();
     $this->model = new UserModel();
+    $this->key = "claveEjemplo";
+    $this->timeToExpire = time()+3600;
   }
 
 
@@ -42,11 +46,11 @@ class AuthApiController  extends ApiController{
             $payload = array(
                 'id' => $userDB->id_user,
                 'name' => "$userDB->email",
-                'exp' => time()+3600
+                'exp' => $this->timeToExpire,
             );
             $header = base64url_encode(json_encode($header));
             $payload = base64url_encode(json_encode($payload));
-            $signature = hash_hmac('SHA256', "$header.$payload", "Clave1234", true);
+            $signature = hash_hmac('SHA256', "$header.$payload",$this->key, true);
             $signature = base64url_encode($signature);
             $token = "$header.$payload.$signature";
             $this->view->response($token);

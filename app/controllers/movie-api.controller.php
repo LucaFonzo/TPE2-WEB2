@@ -10,13 +10,13 @@ class MovieApiController extends ApiController {
     $this->model = new MovieModel();
   }
 
-  public function getMovies($params = null){
+  public function getAll($params = null){
     if (isset($_GET['sort']) && isset($_GET['order']))
     {
       $sorters = array("id_movie","title","description","author","premiere_date","id_gender_fk","image");
       $orders = array("asc","desc");
       if (!in_array($_GET['sort'],$sorters) || !in_array($_GET['order'],$orders)){
-        $this->view->response("Ese orden no existe",400); //400 o 404?
+        $this->view->response("Ese orden no existe",400);
       }else
       {
       $sort = $_GET['sort'];
@@ -28,7 +28,7 @@ class MovieApiController extends ApiController {
         }
         else
         {
-          $this->view->response("No se encontraron peliculas",404); //400 o 404?
+          $this->view->response("No se encontraron peliculas",404);
         }
       }
     }else if (isset($_GET['page']) && isset($_GET['limit']))
@@ -54,7 +54,11 @@ class MovieApiController extends ApiController {
         $movies = $this->model->getByFiltering($filter,$value);
         if ($movies){
           $this->view->response($movies);
+        }else{
+          $this->view->response("No se encontraron peliculas",404);
         }
+      }else {
+        $this->view->response("Campo a filtrar no valido",400);
       }
     }
     else
@@ -64,7 +68,7 @@ class MovieApiController extends ApiController {
     }
   }
 
-  public function getMovie($params = null){
+  public function get($params = null){
     $id = $params[':ID'];
     $movie = $this->model->get($id);
 
@@ -75,7 +79,7 @@ class MovieApiController extends ApiController {
     }
   }
 
-  public function deleteMovie($params = null){
+  public function delete($params = null){
     $id = $params[':ID'];
 
     $movie = $this->model->get($id);
@@ -87,7 +91,7 @@ class MovieApiController extends ApiController {
     }
   }
 
-  public function insertMovie($params = null){
+  public function insert($params = null){
     $movie = $this->getData();
     if(!$this->authHelper->isLoggedIn()){
       $this->view->response("No estas logeado", 401);
@@ -103,7 +107,7 @@ class MovieApiController extends ApiController {
     }
   }
 
-  public function editMovie($params = null){
+  public function edit($params = null){
     $id = $params[':ID'];
     $movieToEdit = $this->model->get($id);
     if(!$this->authHelper->isLoggedIn()){

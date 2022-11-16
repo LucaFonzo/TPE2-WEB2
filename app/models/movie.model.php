@@ -64,13 +64,18 @@ class MovieModel{
   }
 
   public function insert($titulo,$descripcion,$autor,$fechaEstreno,$idGenero,$imagen = null){
-    $pathImagen = '';
+    try {
+      $pathImagen = '';
     if ($imagen){
       $pathImagen = $this->uploadImage($imagen);
     }
     $query = $this->db->prepare("INSERT INTO `movies` (`title`, `description`, `author`, `premiere_date`, `id_gender_fk`, `image`) VALUES (?,?,?,?,?,?)");
     $query->execute([$titulo,$descripcion,$autor,$fechaEstreno,$idGenero,$pathImagen]);
     return $this->db->lastInsertId();
+    } catch (\Throwable $th) {
+      return false;
+    }
+    
   }
 
   public function update($titulo,$descripcion,$autor,$fechaEstreno,$idGenero,$id,$imagen = null){

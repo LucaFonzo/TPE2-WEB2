@@ -105,8 +105,13 @@ class MovieApiController extends ApiController {
       $this->view->response("Todos los campos deben estar completos",400);
     }else {
       $id = $this->model->insert($movie->title,$movie->description,$movie->author,$movie->premiere_date,$movie->id_gender_fk,$movie->image);
-      $movie = $this->model->get($id);
-      $this->view->response($movie,201);
+      if ($id){
+        $movie = $this->model->get($id);
+        $this->view->response($movie,201);
+      }else {
+        $this->view->response("Uno de los campos no es valido",400);
+      }
+      
     }
   }
 

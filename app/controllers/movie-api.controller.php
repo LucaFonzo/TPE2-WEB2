@@ -101,7 +101,6 @@ class MovieApiController extends ApiController {
       $this->view->response("No estas logeado", 401);
       return;
     }
-
     if (empty($movie->title) || empty($movie->description) || empty($movie->author) || empty($movie->premiere_date) || empty($movie->id_gender_fk)){
       $this->view->response("Todos los campos deben estar completos",400);
     }else {

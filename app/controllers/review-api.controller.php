@@ -102,8 +102,12 @@ class ReviewApiController extends ApiController{
       $this->view->response("Todos los campos deben estar completos",400);
     }else {
       $id = $this->model->insert($review->review,$review->id_movie_fk);
-      $movie = $this->model->get($id);
-      $this->view->response($movie,201);
+      if ($id){
+        $review = $this->model->get($id);
+      $this->view->response($review,201);
+      }else {
+        $this->view->response("Uno de los campos no es valido",400);
+      }
     }
   }
 

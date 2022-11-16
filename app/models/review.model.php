@@ -66,9 +66,14 @@ class ReviewModel{
   }
 
   public function insert($review,$id_movie_fk){
+    try {
       $query = $this->db->prepare('INSERT INTO reviews (`review`, `id_movie_fk`) VALUES (?,?)');
       $query->execute([$review,$id_movie_fk]);
       return $this->db->lastInsertId();
+    } catch (\Throwable $th) {
+      return false;
+    }
+      
   }
 
   public function update($review,$id_movie_fk,$id){

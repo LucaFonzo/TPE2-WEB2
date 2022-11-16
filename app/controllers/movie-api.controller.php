@@ -111,7 +111,6 @@ class MovieApiController extends ApiController {
       }else {
         $this->view->response("Uno de los campos no es valido",400);
       }
-      
     }
   }
 
